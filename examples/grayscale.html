@@ -1,5 +1,6 @@
-<html>
+<html lang="en">
 <head>
+<title>grayscale</title>
 <style>
 #target {
     width: 600px;
@@ -22,7 +23,7 @@
     
     <form style="margin-top: 20px">
         <label for="colorGradient">Color Gradient</label>
-		<input type="text" size="200" id="colorGradient" value="black, gray 60%, pink, white"></input>
+		<input type="text" size="200" id="colorGradient" value="black, gray 60%, pink, white" />
     </form>
     
     <button onclick="colorize()">Apply Gradient Map</button>
@@ -31,8 +32,8 @@
     
     <script>
         function colorize() {
-            var target = document.getElementById('target');
-            var gradient = document.getElementById('colorGradient').value;
+            const target = document.getElementById('target');
+            const gradient = document.getElementById('colorGradient').value;
             GradientMaps.applyGradientMap(target, gradient);
         }
     </script>

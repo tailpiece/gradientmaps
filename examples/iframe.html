@@ -1,5 +1,6 @@
-<html>
+<html lang="en">
 <head>
+<title>iframe</title>
 <style>
 body {
     background-color: rgb(209, 207, 184);
@@ -33,7 +34,7 @@ td:nth-child(2) {
 
 iframe {
     width: 500px;
-    height: 280px; 
+    height: 280px;
 }
 </style>
 </head>
@@ -46,18 +47,18 @@ iframe {
 		    <td valign="top">
 				<h3>Sample gradients:</h3>
 				<ul>
-        			<li><input type="button" data-gradient="black, white" onclick="doGMShortcut(this, event)" value="Black &amp; White"/></li>
-			        <li><input type="button" data-gradient="black, gray 60%, white" onclick="doGMShortcut(this, event)" value="Black &amp; White (Darken mid-tones)"/></li>
-			        <li><input type="button" data-gradient="black 10%, white 90%" onclick="doGMShortcut(this, event)" value="High Contrast Black &amp; White"/></li>
-			        <li><input type="button" data-gradient="white, black" onclick="doGMShortcut(this, event)" value="X-Ray"/></li>
-			        <li><input type="button" data-gradient="black, white, black, white" onclick="doGMShortcut(this, event)" value="Double Black &amp; White"/></li>
-			        <li><input type="button" data-gradient="rgb(100, 48, 33), white" onclick="doGMShortcut(this, event)" value="Sepia"/></li>
-			        <li><input type="button" data-gradient="rgb(239, 13, 13) 10%, rgb(244, 219, 10) 90%" onclick="doGMShortcut(this, event)" value="Sunset"/></li>
-			        <li><input type="button" data-gradient="black, blue 10%, white, black, white" onclick="doGMShortcut(this, event)" value="Icy"/></li>
+					<li><input type="button" data-gradient="transparent 0%, black 0%, white" onclick="doGMShortcut(this, event)" value="Black &amp; White"/></li>
+					<li><input type="button" data-gradient="transparent 0%, black 0%, gray 60%, white" onclick="doGMShortcut(this, event)" value="Black &amp; White (Darken mid-tones)"/></li>
+					<li><input type="button" data-gradient="transparent 0%, black 0%, black 10%, white 90%" onclick="doGMShortcut(this, event)" value="High Contrast Black &amp; White"/></li>
+					<li><input type="button" data-gradient="transparent 0%, white 0%, black" onclick="doGMShortcut(this, event)" value="X-Ray"/></li>
+					<li><input type="button" data-gradient="transparent 0%, black 0%, white, black, white" onclick="doGMShortcut(this, event)" value="Double Black &amp; White"/></li>
+					<li><input type="button" data-gradient="transparent 0%, rgb(100, 48, 33) 0%, white" onclick="doGMShortcut(this, event)" value="Sepia"/></li>
+					<li><input type="button" data-gradient="transparent 0%, rgb(239, 13, 13) 0%, rgb(239, 13, 13) 10%, rgb(244, 219, 10) 90%" onclick="doGMShortcut(this, event)" value="Sunset"/></li>
+					<li><input type="button" data-gradient="transparent 0%, black 0%, blue 10%, white, black, white" onclick="doGMShortcut(this, event)" value="Icy"/></li>
       			</ul>
 
 				<button onclick="clearGradientMap()">Clear Gradient Map</button>
-				
+
 				<form style="margin-top: 20px" action="#">
 					<label for="colorGradient">Color Gradient: </label><br/>
 					<input type="text" size="50"  id="colorGradient"  value="black, blue 10%, white, black, white" onkeypress="stopReload(event)"/><br/>
@@ -72,61 +73,61 @@ iframe {
 					<input type="text" size="50"  id="iFrameUrl" value="http://commons.wikimedia.org/wiki/File:Time-lapse_looking_down_on_42nd_and_7th_in_Times_Square.ogv?embedplayer=yes" onkeypress="stopReload(event)"/>
 					<button onclick="reloadIFrame()" >Reload IFrame</button>
 				</form>
-      
-				<iframe id="target" src="http://commons.wikimedia.org/wiki/File:Time-lapse_looking_down_on_42nd_and_7th_in_Times_Square.ogv?embedplayer=yes" width="800px" height="600px"></iframe>  
-				
+
+				<iframe id="target" src="http://commons.wikimedia.org/wiki/File:Time-lapse_looking_down_on_42nd_and_7th_in_Times_Square.ogv?embedplayer=yes" width="800px" height="600px"></iframe>
+
                 <div>
                     <sup>*</sup>Unfortunately, not all URLs will work with this demo due to IFrame  security concerns.
-                </div>				                  
+                </div>
 			</td>
 		</tr>
 	</table>
-    
+
     <script src="../gradientmaps.min.js"></script>
-    
+
     <script>
         function docalc(e) {
-            var target = document.getElementById('target');
-            var gradient = document.getElementById('colorGradient').value;
+			const target = document.getElementById('target');
+			const gradient = document.getElementById('colorGradient').value;
             GradientMaps.applyGradientMap(target, gradient);
-        
-            var gradientDisplay = document.getElementById('gradient-display');
-            gradientDisplay.style['background'] = 
+
+			const gradientDisplay = document.getElementById('gradient-display');
+            gradientDisplay.style['background'] =
                 '-webkit-linear-gradient(left,' + gradient + ')';
-                
+
             e.preventDefault();
         }
-        
+
         function reloadIFrame() {
-            var url = document.getElementById('iFrameUrl').value;
-            if (url.indexOf('http://') != 0) {
+			var url = document.getElementById('iFrameUrl').value;
+            if (url.indexOf('http://') !== 0) {
                 // Simple but effective for demo purposes
                 url = 'http://' + url;
             }
             document.getElementById('target').src = url;
         }
-        
+
         function stopReload(e) {
             if (!e) e = window.event;
-            var keyCode = e.keyCode || e.which;
-            if (keyCode == '13'){
+			const keyCode = e.keyCode || e.which;
+            if (keyCode === '13'){
               // Enter pressed
               e.preventDefault();
-            }        
+            }
         }
-        
+
         function doGMShortcut(btn, e) {
-            var gm = btn.dataset['gradient'];
+			const gm = btn.dataset['gradient'];
             document.getElementById('colorGradient').value = gm;
             docalc(e);
             e.preventDefault();
         }
-        
+
         function clearGradientMap() {
             GradientMaps.removeGradientMap(document.getElementById('target'));
             document.getElementById('colorGradient').value = '';
         }
-        
+
     </script>
 </body>
 </html>

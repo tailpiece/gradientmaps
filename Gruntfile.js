@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
   // Project configuration.
     
-  var project = {
+  const project = {
     files: ['src/gm-library.js', 'src/csscolorparser.js']
   }
     
