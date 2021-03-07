@@ -256,11 +256,22 @@ window.GradientMaps = function(scope) {
 
             // The last thing to be set previously is 'svg'.  If that is still null, that will handle any errors
             if (!svg) {
-                svg = this.addElement(doc, null, 'svg', svgns, {
+                const ua = window.navigator.userAgent.toLowerCase();
+                const isIos = (/iphone|ipad/.test(ua) || (/safari/.test(ua) && 'ontouchstart' in window));
+                const isFirefox = (/firefox/.test(ua));
+                const attributes = {
                     'version': '1.1',
                     'width': 0,
-                    'height': 0
-                });
+                    'height': 0,
+                    'position': 'absolute',
+                    'overflow': 'hidden',
+                    'visibility': 'hidden'
+                };
+                if (!isIos && !isFirefox) {
+                    attributes.display = 'none';
+                }
+
+                svg = this.addElement(doc, null, 'svg', svgns, attributes);
 
                 filterID = 'filter-' + this.generateID();
                 filter = this.addElement(doc, svg, 'filter', svgns, {'id': filterID});
