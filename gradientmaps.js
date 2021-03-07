@@ -44,15 +44,15 @@ window.GradientMaps = function(scope) {
              * If a color-stop, other than the first or last, has a specified position less than the previous stop, its position is changed to be equal to the largest specified position of any prior color-stop.
              */
 
-            var matches = stopsDecl.match(/(((rgb|hsl)a?\(\d{1,3},\s*\d{1,3},\s*\d{1,3}(?:,\s*0?\.?\d+)?\)|\w+|#[0-9a-fA-F]{1,6})(\s+(0?\.\d+|\d{1,3}%))?)/g);
+            const matches = stopsDecl.match(/(((rgb|hsl)a?\(\d{1,3},\s*\d{1,3},\s*\d{1,3}(?:,\s*0?\.?\d+)?\)|\w+|#[0-9a-fA-F]{1,6})(\s+(0?\.\d+|\d{1,3}%))?)/g);
 
-            var stopsDeclArr = stopsDecl.split(',');
+            const stopsDeclArr = stopsDecl.split(',');
             var stops = [];
 
             matches.forEach(function(colorStop) {
                 var colorStopMatches = colorStop.match(/(?:((rgb|hsl)a?\(\d{1,3},\s*\d{1,3},\s*\d{1,3}(?:,\s*0?\.?\d+)?\)|\w+|#[0-9a-fA-F]{1,6})(\s+(?:0?\.\d+|\d{1,3}%))?)/);
                 if (colorStopMatches && colorStopMatches.length >= 4) {
-                    var posMatch = colorStopMatches[3];
+                    posMatch = colorStopMatches[3];
                     stops.push({
                         color: parseCSSColor(colorStopMatches[1]),
                         pos: posMatch ? parse_css_float(posMatch) * 100 : null
@@ -121,14 +121,14 @@ window.GradientMaps = function(scope) {
                     i++;
                 }
 
-                if (stops[0].pos != 0) {
+                if (stops[0].pos !== 0) {
                     stops.unshift({
                         color: stops[0].color,
                         pos: 0
                     });
                 }
 
-                if (stops[stops.length-1].pos != 100) {
+                if (stops[stops.length-1].pos !== 100) {
                     stops.push({
                         color: stops[stops.length-1].color,
                         pos: 100
@@ -218,7 +218,7 @@ window.GradientMaps = function(scope) {
         },
 
         addElement: function(doc, parent, tagname, ns, attributes) {
-            var elem = ns ? doc.createElementNS(ns, tagname) : doc.createElement(tagname);
+            const elem = ns ? doc.createElementNS(ns, tagname) : doc.createElement(tagname);
             if (attributes) {
                 Object.keys(attributes).forEach(function(key, index, keys) {
                     elem.setAttribute(key, attributes[key]);
@@ -233,7 +233,7 @@ window.GradientMaps = function(scope) {
         addSVGComponentTransferFilter: function(elem, colors) {
             var filter = null;
             var svg = null;
-            var svgns = 'http://www.w3.org/2000/svg';
+            const svgns = 'http://www.w3.org/2000/svg';
             var filterID = elem.getAttribute('data-gradientmap-filter');
 
             var svgIsNew = false;
@@ -244,7 +244,7 @@ window.GradientMaps = function(scope) {
                 filter = doc.getElementById(filterID);
                 if (filter) {
                     // Remove old component transfer function
-                    var componentTransfers = filter.getElementsByTagNameNS(svgns, 'feComponentTransfer');
+                    const componentTransfers = filter.getElementsByTagNameNS(svgns, 'feComponentTransfer');
                     if (componentTransfers) {
                         for (var i = componentTransfers.length-1; i >= 0; --i)
                             filter.removeChild(componentTransfers[i]);
@@ -256,7 +256,7 @@ window.GradientMaps = function(scope) {
 
             // The last thing to be set previously is 'svg'.  If that is still null, that will handle any errors
             if (!svg) {
-                var svg = this.addElement(doc, null, 'svg', svgns, {
+                svg = this.addElement(doc, null, 'svg', svgns, {
                     'version': '1.1',
                     'width': 0,
                     'height': 0
@@ -267,7 +267,7 @@ window.GradientMaps = function(scope) {
                 elem.setAttribute('data-gradientmap-filter', filterID);
 
                 // First, apply a color matrix to turn the source into a grayscale
-                var colorMatrix = this.addElement(doc, filter, 'feColorMatrix', svgns, {
+                const colorMatrix = this.addElement(doc, filter, 'feColorMatrix', svgns, {
                     'type': 'matrix',
                     'values': '0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0',
                     'result': 'gray'
@@ -277,7 +277,7 @@ window.GradientMaps = function(scope) {
             }
 
             // Now apply a component transfer to remap the colors
-            var componentTransfer = this.addElement(doc, filter, 'feComponentTransfer', svgns, {'color-interpolation-filters': 'sRGB'});
+            const componentTransfer = this.addElement(doc, filter, 'feComponentTransfer', svgns, {'color-interpolation-filters': 'sRGB'});
 
             var redTableValues = "";
             var greenTableValues = "";
@@ -299,7 +299,7 @@ window.GradientMaps = function(scope) {
             if (svgIsNew)
                 elem.parentElement.insertBefore(svg, elem);
 
-            var filterDecl = 'url(#' + filterID + ')';
+            const filterDecl = 'url(#' + filterID + ')';
             elem.style['-webkit-filter'] = filterDecl;
             elem.style['filter'] = filterDecl;
 
@@ -307,20 +307,20 @@ window.GradientMaps = function(scope) {
         },
 
         applyGradientMap: function(elem, gradient) {
-            var stops = this.calcStopsArray(gradient);
-            var nSegs = this.findMatchingDistributedNSegs(stops);
-            var colors = this.calcDistributedColors(stops, nSegs);
+            const stops = this.calcStopsArray(gradient);
+            const nSegs = this.findMatchingDistributedNSegs(stops);
+            const colors = this.calcDistributedColors(stops, nSegs);
 
             this.addSVGComponentTransferFilter(elem, colors);
         },
 
         removeGradientMap: function(elem) {
-            var filterID = elem.getAttribute('data-gradientmap-filter');
+            const filterID = elem.getAttribute('data-gradientmap-filter');
             if (filterID) {
-                var doc = elem.ownerDocument;
-                var filter = doc.getElementById(filterID);
+                const doc = elem.ownerDocument;
+                const filter = doc.getElementById(filterID);
                 if (filter) {
-                    var svg = filter.parentElement;
+                    const svg = filter.parentElement;
                     svg.removeChild(filter);
                     if (svg.childNodes.length <= 0) {
                         var parent = svg.parentElement;
@@ -360,7 +360,7 @@ window.GradientMaps = function(scope) {
 // IN THE SOFTWARE.
 
 // http://www.w3.org/TR/css3-color/
-var kCSSColorTable = {
+const kCSSColorTable = {
   "transparent": [0,0,0,0], "aliceblue": [240,248,255,1],
   "antiquewhite": [250,235,215,1], "aqua": [0,255,255,1],
   "aquamarine": [127,255,212,1], "azure": [240,255,255,1],
@@ -469,7 +469,7 @@ function css_hue_to_rgb(m1, m2, h) {
 
 function parseCSSColor(css_str) {
   // Remove all whitespace, not compliant, but should just be more accepting.
-  var str = css_str.replace(/ /g, '').toLowerCase();
+  const str = css_str.replace(/ /g, '').toLowerCase();
 
   // Color keywords (and transparent) lookup.
   if (str in kCSSColorTable) return kCSSColorTable[str].slice();  // dup.
@@ -477,14 +477,14 @@ function parseCSSColor(css_str) {
   // #abc and #abc123 syntax.
   if (str[0] === '#') {
     if (str.length === 4) {
-      var iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
+      const iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
       if (!(iv >= 0 && iv <= 0xfff)) return null;  // Covers NaN.
       return [((iv & 0xf00) >> 4) | ((iv & 0xf00) >> 8),
               (iv & 0xf0) | ((iv & 0xf0) >> 4),
               (iv & 0xf) | ((iv & 0xf) << 4),
               1];
     } else if (str.length === 7) {
-      var iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
+      const iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
       if (!(iv >= 0 && iv <= 0xffffff)) return null;  // Covers NaN.
       return [(iv & 0xff0000) >> 16,
               (iv & 0xff00) >> 8,
@@ -495,10 +495,10 @@ function parseCSSColor(css_str) {
     return null;
   }
 
-  var op = str.indexOf('('), ep = str.indexOf(')');
+  const op = str.indexOf('('), ep = str.indexOf(')');
   if (op !== -1 && ep + 1 === str.length) {
-    var fname = str.substr(0, op);
-    var params = str.substr(op+1, ep-(op+1)).split(',');
+    const fname = str.substr(0, op);
+    const params = str.substr(op+1, ep-(op+1)).split(',');
     var alpha = 1;  // To allow case fallthrough.
     switch (fname) {
       case 'rgba':
@@ -517,13 +517,13 @@ function parseCSSColor(css_str) {
         // Fall through.
       case 'hsl':
         if (params.length !== 3) return null;
-        var h = (((parseFloat(params[0]) % 360) + 360) % 360) / 360;  // 0 .. 1
+        const h = (((parseFloat(params[0]) % 360) + 360) % 360) / 360;  // 0 .. 1
         // NOTE(deanm): According to the CSS spec s/l should only be
         // percentages, but we don't bother and let float or percentage.
-        var s = parse_css_float(params[1]);
-        var l = parse_css_float(params[2]);
-        var m2 = l <= 0.5 ? l * (s + 1) : l + s - l * s;
-        var m1 = l * 2 - m2;
+        const s = parse_css_float(params[1]);
+        const l = parse_css_float(params[2]);
+        const m2 = l <= 0.5 ? l * (s + 1) : l + s - l * s;
+        const m1 = l * 2 - m2;
         return [clamp_css_byte(css_hue_to_rgb(m1, m2, h+1/3) * 255),
                 clamp_css_byte(css_hue_to_rgb(m1, m2, h) * 255),
                 clamp_css_byte(css_hue_to_rgb(m1, m2, h-1/3) * 255),

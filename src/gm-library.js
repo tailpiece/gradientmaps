@@ -44,9 +44,9 @@ window.GradientMaps = function(scope) {
              * If a color-stop, other than the first or last, has a specified position less than the previous stop, its position is changed to be equal to the largest specified position of any prior color-stop.
              */
 
-            var matches = stopsDecl.match(/(((rgb|hsl)a?\(\d{1,3},\s*\d{1,3},\s*\d{1,3}(?:,\s*0?\.?\d+)?\)|\w+|#[0-9a-fA-F]{1,6})(\s+(0?\.\d+|\d{1,3}%))?)/g);
+            const matches = stopsDecl.match(/(((rgb|hsl)a?\(\d{1,3},\s*\d{1,3},\s*\d{1,3}(?:,\s*0?\.?\d+)?\)|\w+|#[0-9a-fA-F]{1,6})(\s+(0?\.\d+|\d{1,3}%))?)/g);
 
-            var stopsDeclArr = stopsDecl.split(',');
+            const stopsDeclArr = stopsDecl.split(',');
             var stops = [];
 
             matches.forEach(function(colorStop) {
@@ -121,14 +121,14 @@ window.GradientMaps = function(scope) {
                     i++;
                 }
 
-                if (stops[0].pos != 0) {
+                if (stops[0].pos !== 0) {
                     stops.unshift({
                         color: stops[0].color,
                         pos: 0
                     });
                 }
 
-                if (stops[stops.length-1].pos != 100) {
+                if (stops[stops.length-1].pos !== 100) {
                     stops.push({
                         color: stops[stops.length-1].color,
                         pos: 100
@@ -218,7 +218,7 @@ window.GradientMaps = function(scope) {
         },
 
         addElement: function(doc, parent, tagname, ns, attributes) {
-            var elem = ns ? doc.createElementNS(ns, tagname) : doc.createElement(tagname);
+            const elem = ns ? doc.createElementNS(ns, tagname) : doc.createElement(tagname);
             if (attributes) {
                 Object.keys(attributes).forEach(function(key, index, keys) {
                     elem.setAttribute(key, attributes[key]);
@@ -233,7 +233,7 @@ window.GradientMaps = function(scope) {
         addSVGComponentTransferFilter: function(elem, colors) {
             var filter = null;
             var svg = null;
-            var svgns = 'http://www.w3.org/2000/svg';
+            const svgns = 'http://www.w3.org/2000/svg';
             var filterID = elem.getAttribute('data-gradientmap-filter');
 
             var svgIsNew = false;
@@ -244,7 +244,7 @@ window.GradientMaps = function(scope) {
                 filter = doc.getElementById(filterID);
                 if (filter) {
                     // Remove old component transfer function
-                    var componentTransfers = filter.getElementsByTagNameNS(svgns, 'feComponentTransfer');
+                    const componentTransfers = filter.getElementsByTagNameNS(svgns, 'feComponentTransfer');
                     if (componentTransfers) {
                         for (var i = componentTransfers.length-1; i >= 0; --i)
                             filter.removeChild(componentTransfers[i]);
@@ -256,7 +256,7 @@ window.GradientMaps = function(scope) {
 
             // The last thing to be set previously is 'svg'.  If that is still null, that will handle any errors
             if (!svg) {
-                var svg = this.addElement(doc, null, 'svg', svgns, {
+                svg = this.addElement(doc, null, 'svg', svgns, {
                     'version': '1.1',
                     'width': 0,
                     'height': 0
@@ -267,7 +267,7 @@ window.GradientMaps = function(scope) {
                 elem.setAttribute('data-gradientmap-filter', filterID);
 
                 // First, apply a color matrix to turn the source into a grayscale
-                var colorMatrix = this.addElement(doc, filter, 'feColorMatrix', svgns, {
+                const colorMatrix = this.addElement(doc, filter, 'feColorMatrix', svgns, {
                     'type': 'matrix',
                     'values': '0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0',
                     'result': 'gray'
@@ -277,7 +277,7 @@ window.GradientMaps = function(scope) {
             }
 
             // Now apply a component transfer to remap the colors
-            var componentTransfer = this.addElement(doc, filter, 'feComponentTransfer', svgns, {'color-interpolation-filters': 'sRGB'});
+            const componentTransfer = this.addElement(doc, filter, 'feComponentTransfer', svgns, {'color-interpolation-filters': 'sRGB'});
 
             var redTableValues = "";
             var greenTableValues = "";
@@ -299,7 +299,7 @@ window.GradientMaps = function(scope) {
             if (svgIsNew)
                 elem.parentElement.insertBefore(svg, elem);
 
-            var filterDecl = 'url(#' + filterID + ')';
+            const filterDecl = 'url(#' + filterID + ')';
             elem.style['-webkit-filter'] = filterDecl;
             elem.style['filter'] = filterDecl;
 
@@ -307,20 +307,20 @@ window.GradientMaps = function(scope) {
         },
 
         applyGradientMap: function(elem, gradient) {
-            var stops = this.calcStopsArray(gradient);
-            var nSegs = this.findMatchingDistributedNSegs(stops);
-            var colors = this.calcDistributedColors(stops, nSegs);
+            const stops = this.calcStopsArray(gradient);
+            const nSegs = this.findMatchingDistributedNSegs(stops);
+            const colors = this.calcDistributedColors(stops, nSegs);
 
             this.addSVGComponentTransferFilter(elem, colors);
         },
 
         removeGradientMap: function(elem) {
-            var filterID = elem.getAttribute('data-gradientmap-filter');
+            const filterID = elem.getAttribute('data-gradientmap-filter');
             if (filterID) {
-                var doc = elem.ownerDocument;
-                var filter = doc.getElementById(filterID);
+                const doc = elem.ownerDocument;
+                const filter = doc.getElementById(filterID);
                 if (filter) {
-                    var svg = filter.parentElement;
+                    const svg = filter.parentElement;
                     svg.removeChild(filter);
                     if (svg.childNodes.length <= 0) {
                         var parent = svg.parentElement;

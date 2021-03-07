@@ -21,7 +21,7 @@
 // IN THE SOFTWARE.
 
 // http://www.w3.org/TR/css3-color/
-var kCSSColorTable = {
+const kCSSColorTable = {
   "transparent": [0,0,0,0], "aliceblue": [240,248,255,1],
   "antiquewhite": [250,235,215,1], "aqua": [0,255,255,1],
   "aquamarine": [127,255,212,1], "azure": [240,255,255,1],
@@ -130,7 +130,7 @@ function css_hue_to_rgb(m1, m2, h) {
 
 function parseCSSColor(css_str) {
   // Remove all whitespace, not compliant, but should just be more accepting.
-  var str = css_str.replace(/ /g, '').toLowerCase();
+  const str = css_str.replace(/ /g, '').toLowerCase();
 
   // Color keywords (and transparent) lookup.
   if (str in kCSSColorTable) return kCSSColorTable[str].slice();  // dup.
@@ -138,14 +138,14 @@ function parseCSSColor(css_str) {
   // #abc and #abc123 syntax.
   if (str[0] === '#') {
     if (str.length === 4) {
-      var iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
+      const iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
       if (!(iv >= 0 && iv <= 0xfff)) return null;  // Covers NaN.
       return [((iv & 0xf00) >> 4) | ((iv & 0xf00) >> 8),
               (iv & 0xf0) | ((iv & 0xf0) >> 4),
               (iv & 0xf) | ((iv & 0xf) << 4),
               1];
     } else if (str.length === 7) {
-      var iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
+      const iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
       if (!(iv >= 0 && iv <= 0xffffff)) return null;  // Covers NaN.
       return [(iv & 0xff0000) >> 16,
               (iv & 0xff00) >> 8,
@@ -156,10 +156,10 @@ function parseCSSColor(css_str) {
     return null;
   }
 
-  var op = str.indexOf('('), ep = str.indexOf(')');
+  const op = str.indexOf('('), ep = str.indexOf(')');
   if (op !== -1 && ep + 1 === str.length) {
-    var fname = str.substr(0, op);
-    var params = str.substr(op+1, ep-(op+1)).split(',');
+    const fname = str.substr(0, op);
+    const params = str.substr(op+1, ep-(op+1)).split(',');
     var alpha = 1;  // To allow case fallthrough.
     switch (fname) {
       case 'rgba':
@@ -178,13 +178,13 @@ function parseCSSColor(css_str) {
         // Fall through.
       case 'hsl':
         if (params.length !== 3) return null;
-        var h = (((parseFloat(params[0]) % 360) + 360) % 360) / 360;  // 0 .. 1
+        const h = (((parseFloat(params[0]) % 360) + 360) % 360) / 360;  // 0 .. 1
         // NOTE(deanm): According to the CSS spec s/l should only be
         // percentages, but we don't bother and let float or percentage.
-        var s = parse_css_float(params[1]);
-        var l = parse_css_float(params[2]);
-        var m2 = l <= 0.5 ? l * (s + 1) : l + s - l * s;
-        var m1 = l * 2 - m2;
+        const s = parse_css_float(params[1]);
+        const l = parse_css_float(params[2]);
+        const m2 = l <= 0.5 ? l * (s + 1) : l + s - l * s;
+        const m1 = l * 2 - m2;
         return [clamp_css_byte(css_hue_to_rgb(m1, m2, h+1/3) * 255),
                 clamp_css_byte(css_hue_to_rgb(m1, m2, h) * 255),
                 clamp_css_byte(css_hue_to_rgb(m1, m2, h-1/3) * 255),
